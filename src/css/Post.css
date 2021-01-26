@@ -1,0 +1,38 @@
+.post {
+    max-width: 600px;
+    background-color: white;
+    border: 1px solid lightgray;
+    margin-bottom: 22px;
+    margin-top: 22px;
+}
+.post__image {
+    width: 100%;
+    object-fit: contain;
+    vertical-align: middle;
+    border-top: 1px solid lightgray;
+}
+
+.post__text {
+    font-weight: normal;
+    padding: 20px;
+    word-wrap: break-word;
+}
+
+.post__header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+.post__avatar {
+    margin-right: 10px;
+}
+
+.post__text__button {
+    display : flex;
+    justify-content: space-between;
+}
+
+.post__delete {
+    padding: 20px;
+}

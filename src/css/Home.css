@@ -1,0 +1,43 @@
+.home__header {
+    position: sticky;
+    top: 0;
+    z-index:1;
+    background-color: #c3c6ca;
+    object-fit: contain;
+    padding: 20px;
+    border-bottom: 1px solid lightgrey;
+    display: flex;
+    justify-content: space-between;
+}
+
+.home__subheader {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+.home__posts {
+    padding: 20px;
+    width: 60%;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.home__avatar {
+    margin-right: 10px;
+}
+
+.imageupload {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:10px;
+    margin-bottom:10px; 
+    padding-top: 10px;
+}
+
+.home__subheader__text {
+    font-size: 20px;
+}

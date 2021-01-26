@@ -4,7 +4,9 @@ import './../css/Post.css'
 
 function Post({setSelectedImg ,username, caption ,imageUrl}) {
     
-    
+    const handleDelete = () => {
+        
+    }
 
     return (
         
@@ -15,7 +17,7 @@ function Post({setSelectedImg ,username, caption ,imageUrl}) {
                 <h4 className="post__text">{caption}</h4>
 
                 <div class="post__delete">
-                    <button onClick={}>Delete</button>
+                    <button onClick={handleDelete}>Delete</button>
                 </div>
             </div>
 

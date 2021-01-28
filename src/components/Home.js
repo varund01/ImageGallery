@@ -1,11 +1,12 @@
 import React,{useState} from 'react';
-import { useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import {Button,Avatar} from "@material-ui/core"
 import axios,{post} from 'axios';
  
 import Post from './Post';
 import ImageUpload from './ImageUpload';
 import CustomModal from './CustomModal';
+import Header from './Header';
 
 import '../css/Home.css'
 
@@ -17,14 +18,16 @@ function Home() {
     const [posts, setPosts] = useState(JSON.parse(localStorage.getItem("allImages")));
     const [image, setImage] = useState(null);
     const [caption, setCaption] = useState('');
+    const [uploadCategory, setUploadCategory] = useState('');
     const [selectedImg, setSelectedImg] = useState(null); 
-
-    const logoutHandler = () => {
-        localStorage.clear();
-        history.push("/login");
-    };
+    const [categories] = useState(JSON.parse(localStorage.getItem("categories")));
+    const [showImageUpload,setShowImageUpload] = useState(false);
+    const [showCategoryImages,setShowCategoryImages] = useState("All");
+    const [imagesByCategory,setImagesByCategory] = useState(null);
+    
+    
     console.log(posts);
-
+    localStorage.setItem("allImages",JSON.stringify(posts));
 
     const handleChange = (e) => {
         if(e.target.files[0]) {
@@ -38,6 +41,12 @@ function Home() {
         formData.append('file',file)
         formData.append('email',localStorage.getItem("email"))
         formData.append('caption',caption)
+        if(uploadCategory!="No Category") {
+            formData.append('category',uploadCategory)
+        }
+        else {
+            formData.append('category',"")
+        }
         const config = {
             headers: {
                 'Content-type': 'multipart/form-data'
@@ -49,7 +58,7 @@ function Home() {
 
     const handleUpload = (e) => {
         e.preventDefault();
-        if(image==null) {
+        if(image===null) {
             alert("Please select a file to upload");
             return;
         }
@@ -65,8 +74,34 @@ function Home() {
                 response.data
             ])
         });
+        setShowImageUpload(!showImageUpload);
         cancelCourse();
     }
+
+    
+    const showImagesHandler = (e) => {
+        setShowCategoryImages(e.target.value);
+        if(e.target.value == "All"){
+            setImagesByCategory(posts);
+            return;
+        }
+        const ImagesData = new FormData();
+        ImagesData.append("email",localStorage.getItem("email"));
+        ImagesData.append("category",e.target.value);
+        console.log(e.target.id);
+        axios({
+            url: "http://localhost:8080/getCategoryImages",
+            method: "post",
+            headers: {
+                "Content-type":"application/x-www-form-urlencoded",
+            },
+            data: ImagesData,
+        }).then((res)=>{
+            console.log("here is category ",res.data);
+            setImagesByCategory(res.data);
+        })
+    }
+     
 
     const cancelCourse = () => { 
         document.getElementById("cap").value="";
@@ -81,41 +116,62 @@ function Home() {
     console.log("fdf ",localStorage.getItem("email"),JSON.parse(localStorage.getItem("allImages")));
     return (
         <div className="home">
-            <div className="home__header">
-                <div className="home__subheader">
-                    <p className="home__subheader__text">ImageGallery</p>
-                </div>
-                <div>
-                    <div className="home__subheader">
-                        <Avatar
-                            className="home__avatar"
-                            alt={localStorage.getItem("email")}
-                            src="/static/images/avatar/1.jpg"    
-                        />
-
-                        <h4>{localStorage.getItem("email")}</h4>
-                    <Button onClick={logoutHandler}>Logout</Button>
-                    </div>
-                </div>
-            </div>
+            <Header />
             
+            {
+                <div className="imageupload">
+                        <h2 onClick={()=>setShowImageUpload(!showImageUpload)}>Upload a image</h2><br />
 
-            <div className="imageupload">
-                    <input type="text" id="cap" placeholder="Enter a caption" onChange={e => setCaption(e.target.value)} />
-                    <input type="file"  id="cap1" onChange={e=>handleChange(e)} required/>
-                    <Button onClick={handleUpload}>Upload</Button>
-            </div>
-
+                        {
+                            showImageUpload ?
+                            categories.length ?
+                                <>
+                                    Select the category Name<br />
+                                    <select className="selectCategory" onChange={(e)=>setUploadCategory(e.target.value)}>
+                                        <option value="No Category">No Category</option>
+                                        {
+                                            categories.map((category,index)=>(
+                                                <option key={index} value={category}>#{category}</option>
+                                            ))
+                                        }
+                                    </select><br />
+                                    <input type="text" id="cap" placeholder="Enter a caption" onChange={e => setCaption(e.target.value)} />
+                                    <input type="file"  id="cap1" onChange={e=>handleChange(e)} required/><br />
+                                    <Button variant="contained" color="primary" onClick={handleUpload}>Upload</Button>
+                                </>
+                            : null
+                            : null
+                        }
+                </div>
+            }
 
             <div className="home__posts">
+                <h3>Images</h3>
+                {/* { 
+                    categories.length ?
+                        <>
+                            Select the category Name<br />
+                            <select className="selectCategory" onChange={showImagesHandler}>
+                                <option value="All">All</option>
+                                {
+                                    categories.map((category,index)=>(
+                                        <option key={index} value={category}>#{category}</option>
+                                    ))
+                                }
+                            </select><br />
+                        </>
+                    :
+                    null
+                } */}
                 {
-                    posts ?
-                        posts.map(post => (
-                            <Post key={Math.random()} setSelectedImg={setSelectedImg} username={post.username} caption={post.caption} imageUrl={`assets/${post.imageUrl}`}/>
-                        )).reverse()
+                        posts ?
+                            posts.map((post,index) => (
+                                <Post key={index} posts={posts} setPosts={setPosts} setSelectedImg={setSelectedImg} username={post.username} caption={post.caption} category={post.category} imageUrl={`assets/${post.imageUrl}`}/>
+                            )).reverse()
 
-                    : 
-                        <p>There are no posts right now</p>
+                        : 
+                            <p>There are no posts right now</p>
+                    
                 }
             </div>
             {selectedImg && <CustomModal selectedImg={selectedImg} setSelectedImg={setSelectedImg}/>}

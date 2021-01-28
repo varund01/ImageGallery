@@ -17,6 +17,7 @@ type ImageData struct {
 	ID       string `json:"username"`
 	Filename string `json:"imageUrl"`
 	Caption  string `json:"caption"`
+	Category string `json:"category"`
 }
 
 func getFiles(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +32,7 @@ func getFiles(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 
-	results, err := db.Query("SELECT filename,caption from imageloc where user=?", r.FormValue("email"))
+	results, err := db.Query("SELECT filename,caption,category from imageloc where user=?", r.FormValue("email"))
 	if err != nil {
 		panic(err.Error())
 	}
@@ -39,7 +40,7 @@ func getFiles(w http.ResponseWriter, r *http.Request) {
 	var posts []ImageData
 	for results.Next() {
 		var post ImageData
-		err = results.Scan(&post.Filename, &post.Caption)
+		err = results.Scan(&post.Filename, &post.Caption, &post.Category)
 		post.ID = "abc@gmail.com"
 		if err != nil {
 			panic(err.Error())
@@ -104,14 +105,14 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 
-	insert, err := db.Prepare("INSERT into imageloc (filename,user,caption) VALUES (?,?,?)")
+	insert, err := db.Prepare("INSERT into imageloc (filename,user,caption,category) VALUES (?,?,?,?)")
 	if err != nil {
 		panic(err.Error())
 	}
 
 	filename := tempFile.Name()[26:]
 
-	insert.Exec(filename, r.FormValue("email"), r.FormValue("caption"))
+	insert.Exec(filename, r.FormValue("email"), r.FormValue("caption"), r.FormValue("category"))
 	fmt.Printf("Successfully inserted into database")
 	defer db.Close()
 
@@ -122,6 +123,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	data.ID = r.FormValue("email")
 	data.Caption = r.FormValue("caption")
 	data.Filename = filename
+	data.Category = r.FormValue("category")
 
 	response, err := json.Marshal(data)
 	if err != nil {

@@ -2,7 +2,7 @@
     position: sticky;
     top: 0;
     z-index:1;
-    background-color: #c3c6ca;
+    background-color: #33312c;
     object-fit: contain;
     padding: 20px;
     border-bottom: 1px solid lightgrey;
@@ -33,11 +33,31 @@
     width: 60%;
     margin-left:auto;
     margin-right:auto;
-    margin-top:10px;
+    margin-top:20px;
     margin-bottom:10px; 
     padding-top: 10px;
 }
 
 .home__subheader__text {
     font-size: 20px;
+    color: rgb(235, 231, 225);
+    margin-right: 10px;
+}
+
+.image_upload_button {
+    background-color: #33312c;
+    color:white;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.category_button {
+    color:white;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.imageupload h2 {
+    cursor: pointer;
+    text-decoration: underline;
 }

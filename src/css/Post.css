@@ -36,3 +36,11 @@
 .post__delete {
     padding: 20px;
 }
+
+.post__category {
+    margin-left: 20px;
+}
+
+#post__delete__button {
+    cursor: pointer;
+}

@@ -4,6 +4,7 @@ import {Button} from '@material-ui/core';
 import axios from 'axios';
 
 import "../css/Login.css"
+import "../App.css"
 
 
 function Signup() {
@@ -46,7 +47,7 @@ function Signup() {
         });
         console.log(response);
         if(response.data.message==="Success"){
-            alert("Registered Successfully! Please sign in");
+            //alert("Registered Successfully! Please sign in");
             history.push("/login");
         }
         else
@@ -63,14 +64,14 @@ function Signup() {
     return (
         <div>
             <div className="app__header">
-                ImageGallery
+                <p className="login__subheader__text">ImageGallery</p>
                 {
                     localStorage.getItem("email") ?
                         <div><Link to="/home">Images</Link></div>
                     :
                     <div>
-                        <Button onClick={onClickSignIn}>SignIn</Button>
-                        <Button onClick={onClickSignup}>Signup</Button>
+                        <Button variant="contained" color="primary" id="signinbutton" onClick={onClickSignIn}>SignIn</Button>
+                        <Button variant="contained" color="primary" onClick={onClickSignup}>Signup</Button>
                     </div>
 
                 }
@@ -107,7 +108,7 @@ function Signup() {
                     />
                 </div>
                 <div>
-                    <Button type="submit" name="signin" >Sign In</Button>
+                    <Button variant="contained" color="primary" type="submit" name="signin" >Register</Button>
                 </div>
                 <hr />
             </form>

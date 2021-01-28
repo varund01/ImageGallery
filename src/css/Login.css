@@ -4,3 +4,12 @@
     margin-top: 3%;
     border: 5px;
 }
+
+.login__subheader__text {
+        font-size: 20px;
+        color: rgb(235, 231, 225);
+}
+
+#signinbutton {
+    margin-right: 10px;
+}

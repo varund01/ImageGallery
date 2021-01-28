@@ -49,18 +49,30 @@ function Login() {
             formData.append("email",user.email);
             const allImages = await axios({
                 url:"http://localhost:8080/allImages",
+                // url:"http://localhost/allImages.php",
                 method:"post",
                 headers: {
                     "Content-type":"application/x-www-form-urlencoded",
                 },
                 data: formData,
             });
-            console.log(allImages.data);
+            console.log("all",allImages.data);
             localStorage.setItem("allImages",JSON.stringify(allImages.data));
-            history.push({
-                pathname: "/home",
-            });
+            localStorage.setItem("showImageUpload",false);
             
+            const categories = await axios({
+                url:"http://localhost/categories/read.php",
+                method:"post",
+                headers: {
+                    "Content-type":"application/x-www-form-urlencoded",
+                },
+                data: formData,
+            });
+            localStorage.setItem("categories",JSON.stringify(categories.data));
+
+            history.push({
+                pathname: "/category",
+            });
         }
         else {
             alert(response.data.message);
@@ -84,14 +96,14 @@ function Login() {
         <div className="login"> 
 
             <div className="app__header">
-                ImageGallery
+                <p className="login__subheader__text">ImageGallery</p>
                 {
                     localStorage.getItem("email") ?
                         <div><Link to="/home">Images</Link></div>
                     :
                     <div>
-                        <Button onClick={onClickSignIn}>SignIn</Button>
-                        <Button onClick={onClickSignup}>Signup</Button>
+                        <Button variant="contained" color="primary" id="signinbutton" onClick={onClickSignIn}>SignIn</Button>
+                        <Button variant="contained" color="primary" onClick={onClickSignup}>Signup</Button>
                     </div>
 
                 }
@@ -120,7 +132,7 @@ function Login() {
                             />
                         </div>
                         <div>
-                            <Button type="submit" name="signin">Sign In</Button>
+                            <Button variant="contained" color="primary" type="submit" name="signin">Sign In</Button>
                         </div>
                         <hr />
                     </form>

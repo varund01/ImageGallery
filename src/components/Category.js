@@ -5,12 +5,18 @@ import FetchImages from './FetchImages';
 import Header from './Header';
 import Card from './Card';
 import CustomModal from './CustomModal';
+import CustomAlert from './CustomAlert';
 
 import "../css/Category.css";
 import { Button } from '@material-ui/core';
 
 function Category() {
 
+    const [modal, setModal] = useState({
+        modalIsOpen: false,
+        modalTitle: "",
+        modalBody: "",
+    });
     const [createCategoryName,setCreateCategoryName] = useState("");
     const [deleteCategoryName,setDeleteCategoryName] = useState("");
     const [showAllCategories,setShowAllCategories] = useState(true);
@@ -49,7 +55,11 @@ function Category() {
                 createCategoryName
             ])
         document.getElementById("createinput").value="";
-        alert("Created successfully");
+        setModal({
+            modalIsOpen: true,
+            modalTitle: "Category is created successfully",
+            modalBody: "You can now keep the images in this category...",
+          });
         setCreateCategoryName("");
         
     }
@@ -74,8 +84,12 @@ function Category() {
             setCategories(array);
         }
         setDeleteCategoryName("");
-        
-        window.location.reload();
+        setModal({
+            modalIsOpen: true,
+            modalTitle: "Category is deleted successfully",
+            modalBody: "All the images under this category were deleted successfully",
+          });
+        //window.location.reload();
     }
 
     const getImagesHandler = (e) => {
@@ -195,6 +209,12 @@ function Category() {
             :
             null
             }
+            <CustomAlert
+                isShown={modal.modalIsOpen}
+                setIsShown={setModal}
+                ModalTitle={modal.modalTitle}
+                ModalBody={modal.modalBody}
+            />
         </div>
     )
 }

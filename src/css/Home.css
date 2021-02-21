@@ -42,6 +42,7 @@
     font-size: 20px;
     color: rgb(235, 231, 225);
     margin-right: 10px;
+    cursor: pointer;
 }
 
 .image_upload_button {
@@ -60,4 +61,8 @@
 .imageupload h2 {
     cursor: pointer;
     text-decoration: underline;
+}
+
+.viewQuery__text {
+    margin-left: 10px;
 }

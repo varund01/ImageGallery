@@ -4,6 +4,7 @@ import axios from 'axios';
 import './../css/Post.css'
 import FetchImages from './FetchImages';
 import DeleteIcon from '@material-ui/icons/Delete';
+import {Button,Avatar} from "@material-ui/core";
 
 
 function Post({posts, setPosts, setSelectedImg ,username, caption, category, imageUrl}) {
@@ -25,6 +26,18 @@ function Post({posts, setPosts, setSelectedImg ,username, caption, category, ima
         
         <div className = "post" > 
             {console.log(posts[0])}
+            {
+                username ?
+                <div className="post__text__username">
+                    <Avatar
+                        className="home__avatar"
+                        alt={username}
+                        src="/static/images/avatar/1.jpg"    
+                    />
+                    <p className="username">{username}</p>
+                </div>
+                :null
+            }
             <img className="post__image" src={imageUrl} onClick={()=>setSelectedImg(imageUrl)} alt="image is not available"/>
             <div className="post__text__button">
                 <div>

@@ -3,6 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
 import {withRouter, Link, useHistory} from 'react-router-dom'; 
 import {Button} from "@material-ui/core" ;
+import CustomAlert from "./CustomAlert";
 
 import  "../css/Post.css";
 import "../App.css"
@@ -18,6 +19,11 @@ function Login() {
 
     const history = useHistory();
 
+    const [modal, setModal] = useState({
+        modalIsOpen: false,
+        modalTitle: "",
+        modalBody: "",
+    });
     const [user,setUser] = useState(initialState);
 
     const onChange = async (e) => {
@@ -37,18 +43,19 @@ function Login() {
         fd.append("password", user.password);
         console.log();
         const response = await axios({
-            url:"http://localhost/login.php",
+            url:"http://localhost:7800/login",
             method:"post",
             data: fd,
         });
-        console.log(response.data.message);
+        console.log(response.data);
         if(response.data.message === "Success") {
             localStorage.setItem("email",user.email);
+            localStorage.setItem("Token",response.data.Token)
             console.log(response.data);
             const formData = new FormData();
             formData.append("email",user.email);
             const allImages = await axios({
-                url:"http://localhost:8080/allImages",
+                url:"http://localhost:8070/allImages",
                 // url:"http://localhost/allImages.php",
                 method:"post",
                 headers: {
@@ -75,9 +82,13 @@ function Login() {
             });
         }
         else {
-            alert(response.data.message);
             setUser(initialState);
             console.log(response.data.message);
+            setModal({
+                modalIsOpen: true,
+                modalTitle: "Login error",
+                modalBody: response.data.message,
+              });
         }
 
     };
@@ -138,7 +149,12 @@ function Login() {
                     </form>
                 </>
             }
-
+            <CustomAlert
+                isShown={modal.modalIsOpen}
+                setIsShown={setModal}
+                ModalTitle={modal.modalTitle}
+                ModalBody={modal.modalBody}
+            />
         </div>
     )
 }

@@ -17,10 +17,13 @@ function header() {
     const toggleShowImageUpload = () => {
         history.push("/home");
     }
+    const ImageGalleryHandler = () => {
+        history.push("/images");
+    }
     return (
         <div className="home__header">
             <div className="home__subheader">
-                <p className="home__subheader__text">ImageGallery</p>
+                <p className="home__subheader__text" onClick={ImageGalleryHandler}>ImageGallery</p>
 
                 <p className="image_upload_button" onClick={toggleShowImageUpload}>Upload</p>
 

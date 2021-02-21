@@ -105,14 +105,19 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 
-	insert, err := db.Prepare("INSERT into imageloc (filename,user,caption,category) VALUES (?,?,?,?)")
+	insert, err := db.Prepare("INSERT into imageloc (filename,user,caption,category,CanOthersSee) VALUES (?,?,?,?,?)")
 	if err != nil {
 		panic(err.Error())
 	}
-
+	var CanOthersSee bool
+	if r.FormValue("visible") == "1" {
+		CanOthersSee = true
+	} else {
+		CanOthersSee = false
+	}
 	filename := tempFile.Name()[26:]
 
-	insert.Exec(filename, r.FormValue("email"), r.FormValue("caption"), r.FormValue("category"))
+	insert.Exec(filename, r.FormValue("email"), r.FormValue("caption"), r.FormValue("category"), CanOthersSee)
 	fmt.Printf("Successfully inserted into database")
 	defer db.Close()
 
@@ -136,7 +141,7 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 func setupRoutes() {
 	http.HandleFunc("/upload", uploadFile)
 	http.HandleFunc("/allImages", getFiles)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8070", nil)
 }
 
 func main() {

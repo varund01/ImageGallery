@@ -8,7 +8,7 @@ function FetchImages({posts, URL}) {
         const formData = new FormData();
         formData.append("email",localStorage.getItem("email"));
         const allImages = await axios({
-            url:"http://localhost:8080/allImages",
+            url:"http://localhost:8070/allImages",
             method:"post",
             headers: {
                 "Content-type":"application/x-www-form-urlencoded",

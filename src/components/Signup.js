@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import "../css/Login.css"
 import "../App.css"
+import CustomAlert from './CustomAlert';
 
 
 function Signup() {
@@ -14,6 +15,11 @@ function Signup() {
         email: "",
         password: "",
     };
+    const [modal, setModal] = useState({
+        modalIsOpen: false,
+        modalTitle: "",
+        modalBody: "",
+    });
     const [user,setUser] = useState(initialState);
     const [confirm,setConfirm] = useState("");
 
@@ -48,10 +54,17 @@ function Signup() {
         console.log(response);
         if(response.data.message==="Success"){
             //alert("Registered Successfully! Please sign in");
+            
             history.push("/login");
         }
-        else
-            alert("User already exist. Please sign in to get access to Images");
+        else{
+            setModal({
+                modalIsOpen: true,
+                modalTitle: "User Already Exist",
+                modalBody: "Please sign in to proceed...",
+              });
+        }
+            
     }
 
     const onClickSignIn = () => {
@@ -114,6 +127,12 @@ function Signup() {
             </form>
             </>
             }
+            <CustomAlert
+                isShown={modal.modalIsOpen}
+                setIsShown={setModal}
+                ModalTitle={modal.modalTitle}
+                ModalBody={modal.modalBody}
+            />
         </div>
     )
 }

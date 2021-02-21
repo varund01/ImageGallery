@@ -13,6 +13,7 @@ function CustomModal({ selectedImg, setSelectedImg }) {
         <div className="backdrop" onClick={handleClick}>
 
             <img src={selectedImg} alt="enlarged pic" />
+    
 
         </div>
     )

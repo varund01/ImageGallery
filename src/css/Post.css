@@ -33,6 +33,16 @@
     justify-content: space-between;
 }
 
+.post__text__username {
+    display : flex;
+    padding: 10px;;
+}
+
+.username {
+    margin-left: 10px;;
+    font-size: 25px;
+}
+
 .post__delete {
     padding: 20px;
 }

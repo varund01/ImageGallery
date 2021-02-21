@@ -7,14 +7,21 @@ import Post from './Post';
 import ImageUpload from './ImageUpload';
 import CustomModal from './CustomModal';
 import Header from './Header';
+import CustomAlert from './CustomAlert';
 
 import '../css/Home.css'
+import Pagination from './Pagination';
 
 
 function Home() {
     const history = useHistory();
     const location = useLocation();
     
+    const [modal, setModal] = useState({
+        modalIsOpen: false,
+        modalTitle: "",
+        modalBody: "",
+    });
     const [posts, setPosts] = useState(JSON.parse(localStorage.getItem("allImages")));
     const [image, setImage] = useState(null);
     const [caption, setCaption] = useState('');
@@ -24,6 +31,7 @@ function Home() {
     const [showImageUpload,setShowImageUpload] = useState(false);
     const [showCategoryImages,setShowCategoryImages] = useState("All");
     const [imagesByCategory,setImagesByCategory] = useState(null);
+    const [visible,setVisible] = useState("No");
     
     
     console.log(posts);
@@ -35,12 +43,21 @@ function Home() {
         }
     } 
 
+    const handleVisibile = (e) => {
+        setVisible(e.target.value);
+    }
+
     const fileUpload = (file) => {
-        const url = 'http://localhost:8080/upload';
+        const url = 'http://localhost:8070/upload';
         const formData = new FormData();
         formData.append('file',file)
         formData.append('email',localStorage.getItem("email"))
         formData.append('caption',caption)
+        console.log("visible");
+        if(visible === "Yes")
+            formData.append('visible',"1")
+        else
+            formData.append("visible","0")
         if(uploadCategory!="No Category") {
             formData.append('category',uploadCategory)
         }
@@ -59,20 +76,25 @@ function Home() {
     const handleUpload = (e) => {
         e.preventDefault();
         if(image===null) {
-            alert("Please select a file to upload");
+            setModal({
+                modalIsOpen: true,
+                modalTitle: "File is not Choosen",
+                modalBody: "Please select a file to upload...",
+            });
             return;
         }
         fileUpload(image).then((response)=>{
-            console.log(response.data);
-            posts ?
-            setPosts([
-                ...posts,
-                response.data
-            ])
-            :
-            setPosts([
-                response.data
-            ])
+            // console.log(response.data);
+            // posts ?
+            // setPosts([
+            //     ...posts,
+            //     response.data
+            // ])
+            // :
+            // setPosts([
+            //     response.data
+            // ])
+            window.location.reload();
         });
         setShowImageUpload(!showImageUpload);
         cancelCourse();
@@ -135,6 +157,12 @@ function Home() {
                                             ))
                                         }
                                     </select><br />
+                                    <div className="viewQuery">
+                                        Do you want others to view this Image?
+                                        <input className="viewQuery__text" onChange={handleVisibile} type="radio" name="viewImage" value="Yes"/> Yes
+                                        <input className="viewQuery__text" onChange={handleVisibile} type="radio" name="viewImage" value="No" /> No
+                                    </div>
+                                    <br />
                                     <input type="text" id="cap" placeholder="Enter a caption" onChange={e => setCaption(e.target.value)} />
                                     <input type="file"  id="cap1" onChange={e=>handleChange(e)} required/><br />
                                     <Button variant="contained" color="primary" onClick={handleUpload}>Upload</Button>
@@ -163,7 +191,7 @@ function Home() {
                     :
                     null
                 } */}
-                {
+                {/* {
                         posts ?
                             posts.map((post,index) => (
                                 <Post key={index} posts={posts} setPosts={setPosts} setSelectedImg={setSelectedImg} username={post.username} caption={post.caption} category={post.category} imageUrl={`assets/${post.imageUrl}`}/>
@@ -172,9 +200,17 @@ function Home() {
                         : 
                             <p>There are no posts right now</p>
                     
-                }
+                } */}
+                <Pagination />
             </div>
             {selectedImg && <CustomModal selectedImg={selectedImg} setSelectedImg={setSelectedImg}/>}
+
+            <CustomAlert
+                isShown={modal.modalIsOpen}
+                setIsShown={setModal}
+                ModalTitle={modal.modalTitle}
+                ModalBody={modal.modalBody}
+            />
         </div>
     )
 }

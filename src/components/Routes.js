@@ -8,6 +8,8 @@ import Home from "./Home";
 import Login from "./Login";
 import Signup from "./Signup";
 import Category from "./Category";
+import ImageGallery from './ImageGallery';
+import Pagination from './Pagination';
 
 
 function Routes() {
@@ -23,14 +25,17 @@ function Routes() {
                 <Route exact path="/home">
                     <Home />
                 </Route>
-                <Route exact path="/images">
-                    <CarouselFormat />
-                </Route>
                 <Route exact path="/signup">
                     <Signup />
                 </Route>
                 <Route exact path="/category">
                     <Category />
+                </Route>
+                <Route exact path="/images">
+                    <ImageGallery />
+                </Route>
+                <Route exact path="/pagination">
+                    <Pagination />
                 </Route>
             </Switch>
         </BrowserRouter>
